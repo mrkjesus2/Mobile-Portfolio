@@ -38,5 +38,4 @@ Thumbs.db
 
 # Big unnecessary folders #
 ###########################
-dist/
 node_modules/
