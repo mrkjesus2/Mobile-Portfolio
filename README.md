@@ -72,6 +72,9 @@ Feeling uninspired by the portfolio? Here's a list of cool portfolios I found af
 * <a href="http://www.roxannecook.com/">http://www.roxannecook.com/</a>
 * <a href="http://www.84colors.com/portfolio.html">http://www.84colors.com/portfolio.html</a>
 
+## Running the app
+TODO: FILL THIS IN
+
 
 ## Changes that I made
 ### The Portfolio
@@ -81,3 +84,13 @@ Feeling uninspired by the portfolio? Here's a list of cool portfolios I found af
 * Minified all CSS, JS, and HTML
 * Resized images closer to display size
 * Optimized images with imagemin
+* Inlined style.css with gulp-inline-source
+
+
+### Pizza Shop
+
+* Replaced scrollTop call with a calculation on frame iterator
+* call updatePosition with requestAnimationFrame
+* Refactor changePizzaSizes to not Query the DOM so frequently
+* Refactor updatePositions for mostly 60fps
+* Refactor PizzaGenerator for speed
