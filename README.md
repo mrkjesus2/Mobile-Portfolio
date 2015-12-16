@@ -35,3 +35,5 @@ Download the zip file and extract to a folder of your choosing.  Src has all of 
  - moved scrollTop so it is only called once per function call
  - made an array of the 5 values rather than calculate them in the loop
  - used style.transform for speed in place of style.left
+
+![devtools console image](src/img/pizza-perf.png "devtools console image")
