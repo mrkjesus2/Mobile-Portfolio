@@ -18,7 +18,7 @@ Download the zip file and extract to a folder of your choosing.  Src has all of 
 * Optimized images with imagemin
 * Inlined style.css with gulp-inline-source
 
-![pagespeed score image](dist/img/mobile-portfolio.png "pagespeed score image")
+![pagespeed score image](src/img/mobile-portfolio.png "pagespeed score image")
 
 
 ### Pizza Shop
