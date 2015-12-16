@@ -324,7 +324,8 @@ var selectRandomCrust = function() {
   return randomCrust;
 };
 
-// Returns a string with random pizza ingredients nested inside <li> tags
+
+// Returns array of pizza ingredients
 var makeRandomPizza = function() {
   var pizza = [];
 
@@ -363,6 +364,7 @@ var pizzaElementGenerator = function(i) {
       ul,                    // the list of ingredients
       li;                    // each ingredient
 
+  //Create the elements that are needed for each pizza
   container  = document.createElement("div");
   imageContainer = document.createElement("div");
   image = document.createElement("img");
@@ -370,25 +372,28 @@ var pizzaElementGenerator = function(i) {
   name = document.createElement("h4");
   ul = document.createElement("ul");
 
+  // Assign ids, classes and styles to elements
   container.className = "randomPizzaContainer";
   container.style.width = "33.33%";
   container.style.height = "325px";
-  container.id = "pizza" + i;                // gives each pizza element a unique id
+  container.id = "pizza" + i;      // gives each pizza element a unique id
   imageContainer.className = "col-md-6";
   image.src = "images/pizza.png";
   image.className = "img-responsive";
-
   descriptionContainer.className = "col-md-6";
+
+  // Insert dynamic text for pizzas - innerHTML led to too much parsing
   name.innerText = pizzaName;
-  // Because innerText is much faster I removed ingredientItemizer()
-  // and replaced with this loop that creates a li item for each ingredient
-  // this cut time to generate pizzas by all most 50%
+  // Because innerText is much faster, removed ingredientItemizer()
+  // and replaced with loop that creates a li item for each ingredient
+  // this cut time to generate pizzas by almost 50%
   pizza.forEach(function(ingredient) {
     var li = document.createElement("li");
     li.innerText = ingredient;
     ul.appendChild(li);
   });
 
+  // Append what was created
   imageContainer.appendChild(image);
   container.appendChild(imageContainer);
   descriptionContainer.appendChild(name);
@@ -400,9 +405,11 @@ var pizzaElementGenerator = function(i) {
 
 // resizePizzas(size) is called when the slider in the "Our Pizzas" section of the website moves.
 var resizePizzas = function(size) {
-  window.performance.mark("mark_start_resize");   // User Timing API function
+  // User Timing API function
+  window.performance.mark("mark_start_resize");
 
   // Changes the value for the size of the pizza above the slider
+  // Also now returns the width value
   function changeSliderLabel(size) {
     switch(size) {
       case "1":
@@ -426,7 +433,6 @@ var resizePizzas = function(size) {
     var oldWidth = elem.offsetWidth;
     var windowWidth = document.getElementById("randomPizzas").offsetWidth;
     var oldSize = oldWidth / windowWidth;
-
     var dx = (newSize - oldSize) * windowWidth;
 
     return dx;
@@ -453,8 +459,9 @@ var resizePizzas = function(size) {
 
 window.performance.mark("mark_start_generating"); // collect timing data
 
+// Doesn't change - keep out of loop
 var pizzasDiv = document.getElementById("randomPizzas");
-// This for-loop actually creates and appends all of the pizzas when the page loads
+// This for-loop actually creates and appends all pizzas when the page loads
 for (var i = 2; i < 100; i++) {
   pizzasDiv.appendChild(pizzaElementGenerator(i));
 }
@@ -481,15 +488,15 @@ function logAverageFrame(times) {   // times is the array of User Timing measure
 }
 
 
-// Moves the sliding background pizzas based on scroll position
+// Outside updatePositions to limit DOM querying
 var items = document.getElementsByClassName('mover');
-// items outside function because if updating them, why keep getting them
 
+// Moves the sliding background pizzas based on scroll position
 function updatePositions() {
   frame++;
-  // User timing API code - here for further testing
+  window.performance.mark("mark_start_frame");
 
-  // window.performance.mark("mark_start_frame");
+  // Call these only once per function call instead of once per loop
   var scroll = document.body.scrollTop / 1250;
   var sine = Math.sin;
   // An array of phase values moved from for loop for better performance
@@ -501,17 +508,16 @@ function updatePositions() {
               ]
   for (var i = 0, len = items.length; i < len; i++) {
     var value = items[i].basicLeft + 100 * phase[i % 5] + 'px';
+    // Transform is less expensive than style.left
     items[i].style.transform = "translateX(" + value + ")";
   }
 
-  // User timing API code - Here for further testing
-
-  // window.performance.mark("mark_end_frame");
-  // window.performance.measure("measure_frame_duration", "mark_start_frame", "mark_end_frame");
-  // if (frame % 10 === 0) {
-  //   var timesToUpdatePosition = window.performance.getEntriesByName("measure_frame_duration");
-  //   logAverageFrame(timesToUpdatePosition);
-  // }
+  window.performance.mark("mark_end_frame");
+  window.performance.measure("measure_frame_duration", "mark_start_frame", "mark_end_frame");
+  if (frame % 10 === 0) {
+    var timesToUpdatePosition = window.performance.getEntriesByName("measure_frame_duration");
+    logAverageFrame(timesToUpdatePosition);
+  }
 }
 
 // runs updatePositions on scroll
